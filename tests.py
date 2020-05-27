@@ -12,8 +12,8 @@ from freezegun import freeze_time
 def test_process_message(mes, exp):
     if(mes == 'calendar'):
         with freeze_time(exp):
-            out = server.get_answer(mes)
+            out = server.respond(mes)
     else:
-        out = server.get_answer(mes)
+        out = server.respond(mes)
 
     assert out == exp

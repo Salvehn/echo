@@ -6,7 +6,6 @@ allowed = ['echo', 'calendar', 'stop' ]
 
 
 def respond(message):
-
     match = re.match(rf"({'|'.join(allowed)})[\s]?(.+)?",message)
     command=''
     if match:
@@ -19,23 +18,26 @@ def respond(message):
             data = 'TCP Server stops...'
     else:
         data = f'Available commands: {", ".join(allowed)}'
-
-    print(f"Sending: {data}")
-    writer.write(data.encode())
-    if command=='stop':
-        sys.exit(0)
-
+    return data
 
 
 async def echo_handler(reader, writer):
     addr = writer.get_extra_info('peername')
+
     data = await reader.read(100)
     message = str(data.decode())
     print(f"Received '{message}' from {addr}")
-    respond(message)
+
+    data = respond(message)
+    print(f"Sending: {data}")
+    writer.write(data.encode())
     await writer.drain()
+
+
     writer.close()
 
+    if message.startswith('stop'):
+        sys.exit(0)
 
 
 async def main():
