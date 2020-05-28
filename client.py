@@ -10,9 +10,9 @@ async def tcp_echo_client(message):
     await writer.drain()
 
     data = await reader.read(100)
-    print(''.join(['\nServer responded: ',str(data.decode()),'\n','---------------------------']))
+    print(f"Server responded: {str(data.decode())}\n")
 
-    if(str(data.decode()) == 'stop tcp'):
+    if str(data.decode()).startswith('stop'):
         global looping
         looping = False
 
